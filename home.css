@@ -120,7 +120,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{o
 
 /* founder: photo, then a black panel */
 .founder{background:#1b1b1b;color:var(--white)}
-.founder-shot{width:100%;height:auto;aspect-ratio:1/.92;object-fit:cover;object-position:50% 20%}
+.founder-shot{width:100%;height:auto;aspect-ratio:1/.92;object-fit:cover;object-position:50% 0%}
 .founder-copy{padding:32px var(--pad) 44px}
 .founder h2{font-size:clamp(24px,6.6vw,34px);line-height:1.2;text-wrap:balance}
 .founder-rest{margin-top:14px;font-size:17px;line-height:1.5;color:rgba(255,255,255,.88);max-width:30em}
