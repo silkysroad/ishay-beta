@@ -97,5 +97,33 @@
     rail.addEventListener('scroll',edge,{passive:true});window.addEventListener('resize',edge);edge();
   }
 
+  /* vertical videos: add, remove or reorder entries here and the row rebuilds */
+  var REELS=[
+    {src:'tiktok',id:'7707333202158849298',poster:'img/v-creatine-women.jpg',t:'Creatine is great for women in perimenopause and menopause',link:'creatine.html',cta:'Shop creatine'},
+    {src:'tiktok',id:'7705918195294620936',poster:'img/v-tea-lungs.jpg',t:'Tea for your lungs',link:'https://ishay.store/products/breath-tea',cta:'Shop Breath Tea'},
+    {src:'youtube',id:'GOckmMiFrR8',poster:'img/v-preworkout.jpg',t:'Pre-workout: creatine, sea salt and matcha',link:'creatine.html',cta:'Shop creatine'},
+    {src:'youtube',id:'hegOyvq1xXM',poster:'img/v-sugar.jpg',t:'2 reasons why you crave sugar',link:'https://www.skool.com/abundanceacademy/about',cta:'Join the Academy'}
+  ];
+  var reels=$('[data-reels]');
+  if(reels){
+    var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+    reels.innerHTML=REELS.map(function(r,i){
+      return '<article class="reel" data-i="'+i+'"><button class="reel-play" type="button" aria-label="Play: '+esc(r.t)+'">'+
+        '<img loading="lazy" decoding="async" width="540" height="960" src="'+esc(r.poster)+'" alt="">'+
+        '<svg viewBox="0 0 62 62" aria-hidden="true"><circle cx="31" cy="31" r="30" fill="rgba(251,247,234,.92)"/><path d="M25 19v24l19-12z" fill="#0E2A1F"/></svg></button>'+
+        '<div class="reel-cap"><div class="t">'+esc(r.t)+'</div><a href="'+esc(r.link)+'">'+esc(r.cta)+'</a></div></article>';
+    }).join('');
+    var stop=function(el){var f=$('iframe',el);if(f)f.remove();el.classList.remove('playing')};
+    reels.addEventListener('click',function(e){
+      var b=e.target.closest('.reel-play');if(!b)return;
+      var el=b.parentNode,r=REELS[+el.getAttribute('data-i')];
+      $$('.reel.playing',reels).forEach(stop);
+      var f=document.createElement('iframe');
+      f.src=r.src==='youtube'?'https://www.youtube.com/embed/'+r.id+'?autoplay=1&playsinline=1&rel=0':'https://www.tiktok.com/player/v1/'+r.id+'?autoplay=1&music_info=0&description=0&rel=0';
+      f.allow='autoplay; encrypted-media; fullscreen; picture-in-picture';f.allowFullscreen=true;f.title=r.t;
+      el.appendChild(f);el.classList.add('playing');
+    });
+  }
+
   syncPick();render();
 })();
