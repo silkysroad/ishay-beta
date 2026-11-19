@@ -109,7 +109,7 @@
     var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
     reels.innerHTML=REELS.map(function(r,i){
       return '<article class="reel" data-i="'+i+'"><button class="reel-play" type="button" aria-label="Play: '+esc(r.t)+'">'+
-        '<img loading="lazy" decoding="async" width="540" height="960" src="'+esc(r.poster)+'" alt="">'+
+        '<img decoding="async" width="540" height="960" src="'+esc(r.poster)+'" alt="">'+
         '<svg viewBox="0 0 62 62" aria-hidden="true"><circle cx="31" cy="31" r="30" fill="rgba(251,247,234,.92)"/><path d="M25 19v24l19-12z" fill="#0E2A1F"/></svg></button>'+
         '<div class="reel-cap"><div class="t">'+esc(r.t)+'</div><a href="'+esc(r.link)+'">'+esc(r.cta)+'</a></div></article>';
     }).join('');

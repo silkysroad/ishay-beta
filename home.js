@@ -140,7 +140,7 @@
     shBack.hidden=true;shFoot.hidden=true;shFoot.innerHTML='';sh.removeAttribute('data-h');
     shBody.innerHTML='<div class="sh-list"><h2 id="sheet-title">'+(k==='all'?'All Products':E(cs[0].n))+'</h2>'+cs.map(function(c){
       return (k==='all'?'<h3>'+E(c.n)+'</h3>':'')+'<ul>'+c.h.map(function(h){var pr=VV.p[h];
-        return '<li><button type="button" data-sh-open="'+E(h)+'" data-sh-from="'+E(k)+'"><img loading="lazy" src="'+E(pr.img)+'" alt="" width="88" height="88"><span><b>'+E(pr.t)+'</b><i>'+range(pr)+'</i></span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m7 4 6 6-6 6"/></svg></button></li>'}).join('')+'</ul>'}).join('')+'</div>';
+        return '<li><button type="button" data-sh-open="'+E(h)+'" data-sh-from="'+E(k)+'"><img src="'+E(pr.img)+'" alt="" width="88" height="88"><span><b>'+E(pr.t)+'</b><i>'+range(pr)+'</i></span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m7 4 6 6-6 6"/></svg></button></li>'}).join('')+'</ul>'}).join('')+'</div>';
     shBody.scrollTop=0;if(!sh.open)sh.showModal();return true;
   }
   sh.addEventListener('change',function(e){
@@ -209,7 +209,7 @@
     var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
     reels.innerHTML=REELS.map(function(r,i){
       return '<article class="reel" data-i="'+i+'"><button class="reel-play" type="button" aria-label="Play: '+esc(r.k+'. '+r.t)+'">'+
-        '<img loading="lazy" decoding="async" width="540" height="960" src="'+esc(r.poster)+'" alt=""><span class="pl"></span></button>'+
+        '<img decoding="async" width="540" height="960" src="'+esc(r.poster)+'" alt=""><span class="pl"></span></button>'+
         '<div class="reel-cap"><div class="k">'+esc(r.k)+'</div><div class="t">'+esc(r.t)+'</div><a href="'+esc(r.link)+'">'+esc(r.cta)+'</a></div></article>';
     }).join('');
     /* full-screen viewer: the video on top, its product and an add button pinned underneath */
