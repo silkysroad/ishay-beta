@@ -43,7 +43,7 @@
     '<div class="ship"><p data-ship></p><div class="bar"><i></i></div></div>'+
     '<div class="dr-body" data-lines></div>'+
     '<div class="dr-foot"><div class="sub"><span>Subtotal</span><span data-sub></span></div>'+
-    '<a class="btn btn-gold" data-checkout href="#">Check out</a><small>You finish checkout on ishay.store</small></div>';
+    '<a class="btn" data-checkout href="#">Check out</a><small>You finish checkout on ishay.store</small></div>';
   document.body.appendChild(dlg);
 
   function render(){
@@ -118,6 +118,8 @@
   ];
   var reels=$('[data-reels]');
   if(reels){
+    var only=reels.getAttribute('data-reels');
+    if(only)REELS=REELS.filter(function(r){return r.link===only});
     var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
     reels.innerHTML=REELS.map(function(r,i){
       return '<article class="reel" data-i="'+i+'"><button class="reel-play" type="button" aria-label="Play: '+esc(r.k+'. '+r.t)+'">'+
@@ -140,6 +142,17 @@
       reels.addEventListener('scroll',sync,{passive:true});window.addEventListener('resize',sync);sync();
     }
   }
+
+  /* email signup: beta only shows the state, nothing is stored until it is wired to his list */
+  $$('[data-signup]').forEach(function(f){
+    f.addEventListener('submit',function(e){
+      e.preventDefault();
+      var i=$('input',f),m=$('[data-signup-msg]',f.parentNode);
+      if(!i.checkValidity()){i.reportValidity();return}
+      if(m)m.textContent='Beta preview: signups switch on when this goes live on ishay.store.';
+      i.value='';
+    });
+  });
 
   syncPick();render();
 })();
