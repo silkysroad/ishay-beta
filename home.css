@@ -345,3 +345,59 @@ a.card-add::before{display:none}
   .pdp{padding-top:28px}
   .pdp h1{font-size:48px}
 }
+
+/* v14: shoppable video viewer, cart suggestion, fly-to-bag, page transitions */
+@view-transition{navigation:auto}
+@media (prefers-reduced-motion:no-preference){
+  ::view-transition-old(root){animation:vt-out .22s ease both}
+  ::view-transition-new(root){animation:vt-in .34s cubic-bezier(.2,.7,.2,1) both}
+  @keyframes vt-out{to{opacity:0;transform:translateX(-18px)}}
+  @keyframes vt-in{from{opacity:0;transform:translateX(26px)}}
+  .site-head{view-transition-name:site-head}
+  .announce{view-transition-name:announce}
+}
+.fly{position:fixed;z-index:999;object-fit:contain;pointer-events:none;border-radius:50%;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,.28);will-change:transform}
+
+.up:empty{display:none}
+.up{margin-top:22px;padding:16px;background:var(--cream)}
+.up-k{font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:.04em}
+.up-row{display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center;margin-top:12px}
+.up-row img{width:56px;height:56px;object-fit:cover;background:#fff;box-shadow:0 0 0 1px var(--line)}
+.up-row .n{font-weight:800;font-size:15px;line-height:1.2}
+.up-row .v{font-size:14px;color:var(--mute)}
+.up-row button{min-height:44px;padding:0 16px;border:0;background:#1a1a1a;color:#fff;font-weight:900;font-size:14px;text-transform:uppercase;cursor:pointer;white-space:nowrap}
+.up-row button:active{transform:scale(.97)}
+
+.viewer{border:0;padding:0;margin:0;width:100vw;height:100dvh;max-width:none;max-height:none;background:#000;color:#fff;overflow:hidden}
+.viewer[open]{display:flex;flex-direction:column}
+.viewer::backdrop{background:#000}
+.vw-top{display:flex;align-items:center;gap:4px;padding:calc(6px + env(safe-area-inset-top)) 8px 6px 16px;flex:none}
+.vw-n{font-weight:800;font-size:14px;letter-spacing:.06em;margin-right:auto}
+.vw-top button{position:relative;width:44px;height:44px;display:grid;place-items:center;background:none;border:0;color:#fff;cursor:pointer;padding:0}
+.vw-top svg{width:26px;height:26px}
+.vw-stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;position:relative}
+.vw-frame{height:100%;aspect-ratio:9/16;max-width:100%;position:relative;background:#111 center/cover no-repeat}
+.vw-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vw-nav{position:absolute;top:50%;width:44px;height:44px;margin-top:-22px;border-radius:50%;border:0;background:rgba(255,255,255,.92);cursor:pointer;display:grid;place-items:center;z-index:2;padding:0}
+.vw-nav[hidden]{display:none}
+.vw-nav::before{content:"";width:10px;height:10px;border-top:2.6px solid #111;border-right:2.6px solid #111}
+.vw-prev{left:8px}.vw-prev::before{transform:rotate(-135deg);margin-left:4px}
+.vw-next{right:8px}.vw-next::before{transform:rotate(45deg);margin-right:4px}
+.vw-shop{flex:none;display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center;background:#fff;color:var(--ink);padding:12px 14px calc(12px + env(safe-area-inset-bottom))}
+.vw-shop img{width:56px;height:56px;object-fit:cover;background:#fff;box-shadow:0 0 0 1px var(--line)}
+.vw-info{min-width:0}
+.vw-shop .n{font-weight:800;font-size:15.5px;line-height:1.2}
+.vw-shop .v{font-size:13.5px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vw-shop .btn{width:auto;min-width:0;min-height:48px;padding:12px 18px;font-size:14.5px;white-space:nowrap;margin:0}
+.vw-shop .btn.is-added{background:var(--green)}
+@media (prefers-reduced-motion:no-preference){
+  .viewer[open]{animation:vw-in .28s cubic-bezier(.2,.7,.2,1)}
+  @keyframes vw-in{from{opacity:0;transform:translateY(40px) scale(.97)}}
+  .vw-shop{animation:vw-shop .4s .12s cubic-bezier(.2,.7,.2,1) both}
+  @keyframes vw-shop{from{transform:translateY(100%)}}
+}
+@media (min-width:720px){
+  .vw-shop{width:min(520px,100%);margin:0 auto 20px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+  .vw-prev{left:calc(50% - 300px)}.vw-next{right:calc(50% - 300px)}
+  .vw-stage{padding-bottom:14px}
+}

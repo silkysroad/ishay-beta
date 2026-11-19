@@ -41,7 +41,7 @@
   dlg.className='drawer';dlg.id='cart';dlg.setAttribute('aria-labelledby','cart-title');
   dlg.innerHTML='<div class="dr-head"><h2 id="cart-title">Your cart</h2><button class="dr-close" type="button" data-close>Keep shopping</button></div>'+
     '<div class="ship"><p data-ship></p><div class="bar"><i></i></div></div>'+
-    '<div class="dr-body" data-lines></div>'+
+    '<div class="dr-body"><div data-lines></div><div class="up" data-up></div></div>'+
     '<div class="dr-foot"><div class="sub"><span>Subtotal</span><span data-sub></span></div>'+
     '<a class="btn" data-checkout href="#">Check out</a><small>You finish checkout on ishay.store</small></div>';
   document.body.appendChild(dlg);
@@ -65,20 +65,44 @@
     co.href=has?'https://ishay.store/cart/'+ids.map(function(id){return id+':'+cart[id]}).join(','):'#';
     co.style.opacity=has?1:.4;co.style.pointerEvents=has?'auto':'none';co.setAttribute('aria-disabled',!has);
     $$('[data-count]').forEach(function(el){el.textContent=has?count:''});
+    /* one-tap suggestion: the second jar first (it unlocks free shipping), then creatine, then a tea not in the cart yet */
+    var up=$('[data-up]',dlg),sid=null,why='';
+    if(has){
+      if(c===1){sid=CRE;why='Add a second jar and your creatine ships free'}
+      else if(c===0){sid=CRE;why='Goes with it'}
+      else{sid=['49304402100342','49303786094710','49304309071990'].filter(function(id){return !cart[id]})[0];why='Goes with it'}
+    }
+    up.innerHTML=sid?'<div class="up-k">'+why+'</div><div class="up-row"><img src="'+CAT[sid].img+'" alt="" width="64" height="64"><div><div class="n">'+CAT[sid].n+'</div><div class="v">'+fmt(CAT[sid].p)+'</div></div><button type="button" data-inc="'+sid+'" aria-label="Add '+CAT[sid].n+' to cart">+ Add</button></div>':'';
     save();
   }
   function open(){if(!dlg.open)dlg.showModal()}
-  function add(id,n){if(!CAT[id])return;cart[id]=Math.min(99,(cart[id]||0)+(n||1));render();open()}
+  var calm=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  function bump(){$$('[data-open-cart]').forEach(function(b){if(b.animate&&!calm)b.animate([{transform:'scale(1)'},{transform:'scale(1.28)'},{transform:'scale(1)'}],{duration:320,easing:'cubic-bezier(.2,.7,.2,1)'})})}
+  /* the product image flies from where it was tapped into the bag */
+  function fly(from,src,done){
+    var ov=document.querySelector('dialog.viewer[open]'),bag=$$('[data-open-cart]',ov||document).filter(function(b){return b.offsetParent})[0];
+    if(calm||!from||!bag||!document.body.animate){done();return}
+    var a=from.getBoundingClientRect(),b=bag.getBoundingClientRect();
+    if(!a.width||a.bottom<0||a.top>innerHeight){done();return}
+    var s=Math.min(a.width,a.height,180),g=document.createElement('img');
+    g.src=src;g.alt='';g.className='fly';g.style.cssText='left:'+(a.left+a.width/2-s/2)+'px;top:'+(a.top+a.height/2-s/2)+'px;width:'+s+'px;height:'+s+'px';
+    (document.querySelector('dialog.viewer[open]')||document.body).appendChild(g);
+    var dx=b.left+b.width/2-(a.left+a.width/2),dy=b.top+b.height/2-(a.top+a.height/2);
+    var an=g.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:'translate('+dx*.55+'px,'+(dy*.55-60)+'px) scale(.55)',opacity:1,offset:.55},{transform:'translate('+dx+'px,'+dy+'px) scale(.12)',opacity:.35}],{duration:560,easing:'cubic-bezier(.3,.1,.3,1)'});
+    var fin=function(){g.remove();bump();done()};an.onfinish=fin;an.oncancel=fin;
+  }
+  function put(id,n){if(!CAT[id])return false;cart[id]=Math.min(99,(cart[id]||0)+(n||1));render();return true}
+  function add(id,n,from){if(!CAT[id])return;fly(from,CAT[id].img,function(){put(id,n);open()})}
 
   dlg.addEventListener('click',function(e){
     var t=e.target;
     if(t===dlg||t.hasAttribute('data-close')){dlg.close();return}
     var inc=t.getAttribute('data-inc'),dec=t.getAttribute('data-dec');
-    if(inc){cart[inc]=Math.min(99,cart[inc]+1);render()}
+    if(inc){cart[inc]=Math.min(99,(cart[inc]||0)+1);render()}
     if(dec){cart[dec]-=1;if(cart[dec]<=0)delete cart[dec];render()}
   });
   $$('[data-open-cart]').forEach(function(b){b.addEventListener('click',function(){render();open()})});
-  $$('[data-add]').forEach(function(b){var t=b.textContent;b.addEventListener('click',function(){add(b.getAttribute('data-add'),1);b.classList.add('is-added');b.textContent='Added';setTimeout(function(){b.classList.remove('is-added');b.textContent=t},1600)})});
+  $$('[data-add]').forEach(function(b){var t=b.textContent;b.addEventListener('click',function(){var card=b.closest('.card');add(b.getAttribute('data-add'),1,card&&$('.card-shot img',card));b.classList.add('is-added');b.textContent='Added';setTimeout(function(){b.classList.remove('is-added');b.textContent=t},1600)})});
 
   /* jar picker */
   var radios=$$('input[name=jars]'),words=['','one jar','two jars'];
@@ -90,7 +114,7 @@
     if(bs)bs.textContent=fmt(CAT[CRE].p*n)+(n>1?', ships free':'');
   }
   radios.forEach(function(i){i.addEventListener('change',syncPick)});
-  ['#add','#add2'].forEach(function(s){var b=$(s);if(b)b.addEventListener('click',function(){add(CRE,picked())})});
+  ['#add','#add2'].forEach(function(s){var b=$(s);if(b)b.addEventListener('click',function(){add(CRE,picked(),s==='#add'?$('.feature-shot img'):null)})});
 
   /* sticky buy bar: shows once the main button is off screen */
   var bar=$('#buybar'),main=$('#add');
@@ -111,10 +135,10 @@
 
   /* vertical videos: add, remove or reorder entries here and the row rebuilds */
   var REELS=[
-    {src:'tiktok',id:'7707333202158849298',poster:'img/v-creatine-women.jpg',k:'Creatine',t:'Why it matters for women in perimenopause and menopause.',link:'creatine.html',cta:'Shop Creatine'},
-    {src:'tiktok',id:'7705918195294620936',poster:'img/v-tea-lungs.jpg',k:'Breath Tea',t:'Tea for your lungs.',link:'https://ishay.store/products/breath-tea',cta:'Shop Breath Tea'},
-    {src:'youtube',id:'GOckmMiFrR8',poster:'img/v-preworkout.jpg',k:'Pre-Workout',t:'Creatine, sea salt and matcha.',link:'creatine.html',cta:'Shop Creatine'},
-    {src:'youtube',id:'hegOyvq1xXM',poster:'img/v-sugar.jpg',k:'Sugar Cravings',t:'Two reasons why you crave sugar.',link:'https://www.skool.com/abundanceacademy/about',cta:'Join the Academy'}
+    {src:'tiktok',id:'7707333202158849298',poster:'img/v-creatine-women.jpg',k:'Creatine',t:'Why it matters for women in perimenopause and menopause.',link:'creatine.html',cta:'Shop Creatine',pid:'43224259985526'},
+    {src:'tiktok',id:'7705918195294620936',poster:'img/v-tea-lungs.jpg',k:'Breath Tea',t:'Tea for your lungs.',link:'https://ishay.store/products/breath-tea',cta:'Shop Breath Tea',pid:'49303786094710'},
+    {src:'youtube',id:'GOckmMiFrR8',poster:'img/v-preworkout.jpg',k:'Pre-Workout',t:'Creatine, sea salt and matcha.',link:'creatine.html',cta:'Shop Creatine',pid:'43224259985526'},
+    {src:'youtube',id:'hegOyvq1xXM',poster:'img/v-sugar.jpg',k:'Sugar Cravings',t:'Two reasons why you crave sugar.',link:'https://www.skool.com/abundanceacademy/about',cta:'Join the Academy',ext:{n:'Abundance Academy',v:'$47 a month on Skool',img:'https://ishay.store/cdn/shop/files/VV47.jpg?width=160'}}
   ];
   var reels=$('[data-reels]');
   if(reels){
@@ -126,15 +150,43 @@
         '<img loading="lazy" decoding="async" width="540" height="960" src="'+esc(r.poster)+'" alt=""><span class="pl"></span></button>'+
         '<div class="reel-cap"><div class="k">'+esc(r.k)+'</div><div class="t">'+esc(r.t)+'</div><a href="'+esc(r.link)+'">'+esc(r.cta)+'</a></div></article>';
     }).join('');
-    var stop=function(el){var f=$('iframe',el);if(f)f.remove();el.classList.remove('playing')};
-    reels.addEventListener('click',function(e){
-      var b=e.target.closest('.reel-play');if(!b)return;
-      var el=b.parentNode,r=REELS[+el.getAttribute('data-i')];
-      $$('.reel.playing',reels).forEach(stop);
+    /* full-screen viewer: the video on top, its product and an add button pinned underneath */
+    var vw=document.createElement('dialog');vw.className='viewer';vw.setAttribute('aria-label','Video');
+    vw.innerHTML='<div class="vw-top"><span class="vw-n" data-vw-n></span><button type="button" class="vw-bag" data-open-cart aria-label="Open cart"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M5 10h18l-1.6 13H6.6z"/><path d="M10 10V8a4 4 0 0 1 8 0v2"/></svg><span data-count></span></button><button type="button" class="vw-x" data-vw-close aria-label="Close video"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M7 7l14 14M21 7 7 21"/></svg></button></div>'+
+      '<div class="vw-stage"><button type="button" class="vw-nav vw-prev" data-vw-step="-1" aria-label="Previous video"></button><div class="vw-frame" data-vw-frame></div><button type="button" class="vw-nav vw-next" data-vw-step="1" aria-label="Next video"></button></div>'+
+      '<div class="vw-shop" data-vw-shop></div>';
+    document.body.appendChild(vw);
+    $('[data-open-cart]',vw).addEventListener('click',function(){render();open()});
+    var cur=0,frame=$('[data-vw-frame]',vw),shop=$('[data-vw-shop]',vw);
+    var show=function(i){
+      cur=(i+REELS.length)%REELS.length;var r=REELS[cur],it=r.pid?CAT[r.pid]:r.ext;
+      frame.innerHTML='';
       var f=document.createElement('iframe');
       f.src=r.src==='youtube'?'https://www.youtube.com/embed/'+r.id+'?autoplay=1&playsinline=1&rel=0':'https://www.tiktok.com/player/v1/'+r.id+'?autoplay=1&music_info=0&description=0&rel=0';
       f.allow='autoplay; encrypted-media; fullscreen; picture-in-picture';f.allowFullscreen=true;f.title=r.k+'. '+r.t;
-      el.appendChild(f);el.classList.add('playing');
+      frame.style.backgroundImage='url("'+r.poster+'")';frame.appendChild(f);
+      $('[data-vw-n]',vw).textContent=(cur+1)+' / '+REELS.length;
+      $$('.vw-nav',vw).forEach(function(b){b.hidden=REELS.length<2});
+      shop.innerHTML='<img src="'+esc(it.img)+'" alt="" width="64" height="64"><div class="vw-info"><div class="n">'+esc(it.n)+'</div><div class="v">'+esc(r.pid?fmt(it.p)+' · '+it.v:it.v)+'</div></div>'+
+        (r.pid?'<button type="button" class="btn" data-vw-add="'+r.pid+'">Add to cart</button>':'<a class="btn" href="'+esc(r.link)+'">'+esc(r.cta)+'</a>');
+    };
+    reels.addEventListener('click',function(e){
+      var b=e.target.closest('.reel-play');if(!b)return;
+      show(+b.parentNode.getAttribute('data-i'));if(!vw.open)vw.showModal();
+    });
+    vw.addEventListener('close',function(){frame.innerHTML=''});
+    vw.addEventListener('keydown',function(e){if(e.key==='ArrowRight')show(cur+1);if(e.key==='ArrowLeft')show(cur-1)});
+    vw.addEventListener('click',function(e){
+      var t=e.target.closest('button');if(!t)return;
+      if(t.hasAttribute('data-vw-close')){vw.close();return}
+      var st=t.getAttribute('data-vw-step');if(st){show(cur+ +st);return}
+      var id=t.getAttribute('data-vw-add');
+      if(id){
+        /* the video keeps playing: the jar flies to the bag and the button confirms, no drawer */
+        fly($('img',shop),CAT[id].img,function(){put(id,1)});
+        t.textContent='Added';t.classList.add('is-added');
+        setTimeout(function(){if(t.isConnected){t.textContent='Add another';t.classList.remove('is-added')}},1500);
+      }
     });
     var rbar=$('[data-reel-bar]');
     if(rbar){
