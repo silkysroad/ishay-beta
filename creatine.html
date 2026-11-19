@@ -8,14 +8,14 @@
 <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="image" href="https://cdn.shopify.com/s/files/1/0638/1017/5094/files/chatcreatine_c2d5224b-eaaf-49de-9ec8-21dc7bbbe920.png?v=1774450659&width=1300">
+<link rel="preload" as="image" href="img/creatine.jpg">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="site.css">
 <style>
 /* product page */
 .pdp{display:grid;grid-template-columns:1.05fr .95fr;align-items:start}
-.pdp-shot{background:#fff;position:sticky;top:74px;height:calc(100vh - 74px);min-height:520px;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.pdp-shot img{width:100%;height:100%;object-fit:contain;transform:translateX(5%) scale(1.08)}
+.pdp-shot{background:#f1ead6;position:sticky;top:74px;height:calc(100vh - 74px);min-height:520px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.pdp-shot img{width:100%;height:100%;object-fit:cover}
 .pdp-buy{padding:72px max(28px,calc((100vw - var(--wrap))/2 + 28px)) 80px 64px}
 .pdp-buy h1{font-size:clamp(50px,5.4vw,84px);font-weight:500;line-height:.95}
 .pdp-size{margin-top:14px;font-size:18px;color:rgba(20,32,26,.7)}
@@ -110,7 +110,7 @@
   .pdp-buy > :nth-child(n+4){animation-delay:.2s}
   .pdp-shot img{animation:settle 1.1s cubic-bezier(.2,.7,.2,1) both}
   @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
-  @keyframes settle{from{opacity:0;transform:translateX(5%) scale(1.14)}to{opacity:1;transform:translateX(5%) scale(1.08)}}
+  @keyframes settle{from{opacity:0;transform:scale(1.05)}to{opacity:1;transform:scale(1)}}
   .drawer[open]{animation:slide .3s cubic-bezier(.2,.7,.2,1)}
   @keyframes slide{from{transform:translateX(100%)}to{transform:none}}
 }
@@ -119,7 +119,7 @@
 @media (max-width:980px){
   .pdp{grid-template-columns:1fr}
   .pdp-shot{position:static;height:auto;min-height:0}
-  .pdp-shot img{height:auto;max-height:360px}
+  .pdp-shot img{height:auto;aspect-ratio:1/1;max-height:440px}
   .pdp-buy{padding:40px 28px 56px}
   .steps{grid-template-columns:1fr;gap:28px}
   .glass-grid,.faq-grid{grid-template-columns:1fr;gap:34px}
@@ -184,7 +184,7 @@
 
 <section class="pdp">
   <div class="pdp-shot">
-    <img src="https://cdn.shopify.com/s/files/1/0638/1017/5094/files/chatcreatine_c2d5224b-eaaf-49de-9ec8-21dc7bbbe920.png?v=1774450659&width=1300" width="1536" height="1024" fetchpriority="high" alt="Very Very Creatine in a glass jar with a gold lid">
+    <img src="img/creatine.jpg" width="1200" height="1200" fetchpriority="high" alt="Very Very Creatine in a glass jar with a gold lid">
   </div>
 
   <div class="pdp-buy">
@@ -284,17 +284,17 @@
     </div>
     <div class="tea-grid">
       <a class="tea-card" href="https://ishay.store/products/flow-tea">
-        <img loading="lazy" decoding="async" src="https://cdn.shopify.com/s/files/1/0638/1017/5094/files/75AD7D6D-E41F-4D45-AF5A-AA878B0B07E2.png?v=1794167748&width=900" alt="Flow Tea in a glass jar">
+        <img loading="lazy" decoding="async" src="img/tea-flow.jpg" alt="Flow Tea in a glass jar">
         <h3>Flow</h3><p class="tea-for">For your cycle</p>
         <div class="tea-buy"><span>$21.99</span><span>Shop Flow</span></div>
       </a>
       <a class="tea-card" href="https://ishay.store/products/breath-tea">
-        <img loading="lazy" decoding="async" src="https://cdn.shopify.com/s/files/1/0638/1017/5094/files/36CD4464-1235-41DC-8EBA-42FF97419B43.png?v=1794166562&width=900" alt="Breath Tea in a glass jar">
+        <img loading="lazy" decoding="async" src="img/tea-breath.jpg" alt="Breath Tea in a glass jar">
         <h3>Breath</h3><p class="tea-for">For your lungs</p>
         <div class="tea-buy"><span>$21.99</span><span>Shop Breath</span></div>
       </a>
       <a class="tea-card" href="https://ishay.store/products/relax-tea">
-        <img loading="lazy" decoding="async" src="https://cdn.shopify.com/s/files/1/0638/1017/5094/files/BBF0655B-70AE-4303-A1E5-DB753EFB2F1F.png?v=1794167417&width=900" alt="Relax Tea in a glass jar">
+        <img loading="lazy" decoding="async" src="img/tea-relax.jpg" alt="Relax Tea in a glass jar">
         <h3>Relax</h3><p class="tea-for">For your evening</p>
         <div class="tea-buy"><span>$21.99</span><span>Shop Relax</span></div>
       </a>
@@ -349,7 +349,7 @@
   <div class="ship"><p data-ship></p><div class="bar"><i></i></div></div>
   <div class="dr-body">
     <div class="line" data-line>
-      <img src="https://cdn.shopify.com/s/files/1/0638/1017/5094/files/chatcreatine_c2d5224b-eaaf-49de-9ec8-21dc7bbbe920.png?v=1774450659&width=300" alt="" width="92" height="92">
+      <img src="img/creatine.jpg" alt="" width="92" height="92">
       <div>
         <div class="n">Creatine monohydrate</div>
         <div class="v">250g glass jar, $34.99 each</div>
