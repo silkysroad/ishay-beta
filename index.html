@@ -8,7 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;800&display=swap" rel="stylesheet">
-<link rel="preload" as="image" href="img/hero-kitchen-poster.jpg">
+<link rel="preload" as="image" href="img/hero-montage-phone-poster.jpg" media="(max-width:999px)">
+<link rel="preload" as="image" href="img/hero-montage-desktop-poster.jpg" media="(min-width:1000px)">
 <link rel="stylesheet" href="home.css">
 </head>
 <body>
@@ -58,9 +59,7 @@
 
 <section class="hero">
   <div class="hero-media" aria-hidden="true">
-    <video autoplay muted loop playsinline preload="metadata" poster="img/hero-kitchen-poster.jpg" src="vid/hero-kitchen.mp4"></video>
-    <video muted loop playsinline preload="none" poster="img/hero-produce-poster.jpg" data-src="vid/hero-produce.mp4"></video>
-    <video muted loop playsinline preload="none" poster="img/hero-gym-poster.jpg" data-src="vid/hero-gym.mp4"></video>
+    <video muted loop playsinline preload="none" disablepictureinpicture poster="img/hero-montage-phone-poster.jpg" data-src-phone="vid/hero-montage-phone.mp4" data-src-desktop="vid/hero-montage-desktop.mp4" data-poster-desktop="img/hero-montage-desktop-poster.jpg"></video>
   </div>
   <div class="hero-copy">
     <span class="badge">Ships free on two jars</span>
