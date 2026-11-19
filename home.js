@@ -78,7 +78,7 @@
     if(dec){cart[dec]-=1;if(cart[dec]<=0)delete cart[dec];render()}
   });
   $$('[data-open-cart]').forEach(function(b){b.addEventListener('click',function(){render();open()})});
-  $$('[data-add]').forEach(function(b){b.addEventListener('click',function(){add(b.getAttribute('data-add'),1)})});
+  $$('[data-add]').forEach(function(b){var t=b.textContent;b.addEventListener('click',function(){add(b.getAttribute('data-add'),1);b.classList.add('is-added');b.textContent='Added';setTimeout(function(){b.classList.remove('is-added');b.textContent=t},1600)})});
 
   /* jar picker */
   var radios=$$('input[name=jars]'),words=['','one jar','two jars'];
